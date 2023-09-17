@@ -16,7 +16,53 @@ class App extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Points Counter'),
         ),
+        body: Column(
+          children: [
+            const Text(
+              'Team A',
+              style: TextStyle(fontSize: 32),
+            ),
+            const Text(
+              '0',
+              style: TextStyle(
+                fontSize: 128,
+              ),
+            ),
+            MainElevatedButton(
+              label: 'Add 1 Point',
+              onPressed: () {},
+            ),
+            MainElevatedButton(
+              label: 'Add 2 Points',
+              onPressed: () {},
+            ),
+            MainElevatedButton(
+              label: 'Add 3 Points',
+              onPressed: () {},
+            ),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class MainElevatedButton extends StatelessWidget {
+  final String label;
+  final VoidCallback onPressed;
+
+  const MainElevatedButton({
+    super.key,
+    required this.label,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(fixedSize: const Size.fromWidth(128)),
+      onPressed: onPressed,
+      child: Text(label),
     );
   }
 }
