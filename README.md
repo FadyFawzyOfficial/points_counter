@@ -1,16 +1,20 @@
-# points_counter
+# Points Counter 🏀⛹🏻
 
-A new Flutter project.
+Points Counter App is a Flutter Project.
 
-## Getting Started
+## Our Goal
 
-This project is a starting point for a Flutter application.
+Points Counter App is for learning purpose.
+It's the 2nd App which in:
+the 8th Section (Basketball Points Counter App)
+of Flutter & Dart Complete Development Course [2023] [Arabic] Course (On Udemy)
 
-A few resources to get you started if this is your first Flutter project:
+Flutter version: 3.13.1
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Created & Developed by:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Eng.Fady Fawzy
+
+Mobile Application Developer
+
+FadyFawzy.Official@gmail.com
