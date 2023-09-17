@@ -6,5 +6,17 @@ class App extends StatelessWidget {
   const App({super.key});
 
   @override
-  Widget build(context) => const MaterialApp();
+  Widget build(context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: const ColorScheme.light(primary: Colors.orange),
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Points Counter'),
+        ),
+      ),
+    );
+  }
 }
