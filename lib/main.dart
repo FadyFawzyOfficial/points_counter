@@ -16,33 +16,52 @@ class App extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Points Counter'),
         ),
-        body: Column(
-          children: [
-            const Text(
-              'Team A',
-              style: TextStyle(fontSize: 32),
-            ),
-            const Text(
-              '0',
-              style: TextStyle(
-                fontSize: 128,
-              ),
-            ),
-            MainElevatedButton(
-              label: 'Add 1 Point',
-              onPressed: () {},
-            ),
-            MainElevatedButton(
-              label: 'Add 2 Points',
-              onPressed: () {},
-            ),
-            MainElevatedButton(
-              label: 'Add 3 Points',
-              onPressed: () {},
-            ),
-          ],
+        body: const Padding(
+          padding: EdgeInsets.symmetric(vertical: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ScoreCounter(name: 'Team A'),
+              VerticalDivider(thickness: 1),
+              ScoreCounter(name: 'Team B'),
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class ScoreCounter extends StatelessWidget {
+  final String name;
+
+  const ScoreCounter({super.key, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          name,
+          style: const TextStyle(fontSize: 32),
+        ),
+        const Text(
+          '0',
+          style: TextStyle(fontSize: 128),
+        ),
+        MainElevatedButton(
+          label: 'Add 1 Point',
+          onPressed: () {},
+        ),
+        MainElevatedButton(
+          label: 'Add 2 Points',
+          onPressed: () {},
+        ),
+        MainElevatedButton(
+          label: 'Add 3 Points',
+          onPressed: () {},
+        ),
+      ],
     );
   }
 }
