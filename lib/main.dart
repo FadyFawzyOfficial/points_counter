@@ -16,14 +16,26 @@ class App extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Points Counter'),
         ),
-        body: const Padding(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Column(
             children: [
-              ScoreCounter(name: 'Team A'),
-              VerticalDivider(thickness: 1),
-              ScoreCounter(name: 'Team B'),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ScoreCounter(name: 'Team A'),
+                  SizedBox(
+                    height: 300,
+                    child: VerticalDivider(thickness: 1),
+                  ),
+                  ScoreCounter(name: 'Team B'),
+                ],
+              ),
+              Expanded(
+                child: Center(
+                  child: MainElevatedButton(label: 'Reset', onPressed: () {}),
+                ),
+              )
             ],
           ),
         ),
