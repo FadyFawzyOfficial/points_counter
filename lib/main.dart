@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 
 void main() => runApp(const App());
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   const App({super.key});
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  var teamAScore = 0;
+  var teamBScore = 0;
 
   @override
   Widget build(context) {
@@ -20,20 +28,38 @@ class App extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: Column(
             children: [
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ScoreCounter(name: 'Team A'),
-                  SizedBox(
+                  ScoreCounter(
+                    name: 'Team A',
+                    score: teamAScore,
+                    add1Point: () => setState(() => teamAScore++),
+                    add2Points: () => setState(() => teamAScore += 2),
+                    add3Points: () => setState(() => teamAScore += 3),
+                  ),
+                  const SizedBox(
                     height: 300,
                     child: VerticalDivider(thickness: 1),
                   ),
-                  ScoreCounter(name: 'Team B'),
+                  ScoreCounter(
+                    name: 'Team B',
+                    score: teamBScore,
+                    add1Point: () => setState(() => teamBScore++),
+                    add2Points: () => setState(() => teamBScore += 2),
+                    add3Points: () => setState(() => teamBScore += 3),
+                  ),
                 ],
               ),
               Expanded(
                 child: Center(
-                  child: MainElevatedButton(label: 'Reset', onPressed: () {}),
+                  child: MainElevatedButton(
+                    label: 'Reset',
+                    onPressed: () => setState(() {
+                      teamAScore = 0;
+                      teamBScore = 0;
+                    }),
+                  ),
                 ),
               )
             ],
@@ -46,8 +72,19 @@ class App extends StatelessWidget {
 
 class ScoreCounter extends StatelessWidget {
   final String name;
+  final int score;
+  final VoidCallback add1Point;
+  final VoidCallback add2Points;
+  final VoidCallback add3Points;
 
-  const ScoreCounter({super.key, required this.name});
+  const ScoreCounter({
+    super.key,
+    required this.name,
+    required this.score,
+    required this.add1Point,
+    required this.add2Points,
+    required this.add3Points,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -57,21 +94,21 @@ class ScoreCounter extends StatelessWidget {
           name,
           style: const TextStyle(fontSize: 32),
         ),
-        const Text(
-          '0',
-          style: TextStyle(fontSize: 128),
+        Text(
+          '$score',
+          style: const TextStyle(fontSize: 128),
         ),
         MainElevatedButton(
-          label: 'Add 1 Point',
-          onPressed: () {},
+          points: 1,
+          onPressed: add1Point,
         ),
         MainElevatedButton(
-          label: 'Add 2 Points',
-          onPressed: () {},
+          points: 2,
+          onPressed: add2Points,
         ),
         MainElevatedButton(
-          label: 'Add 3 Points',
-          onPressed: () {},
+          points: 3,
+          onPressed: add3Points,
         ),
       ],
     );
@@ -79,12 +116,14 @@ class ScoreCounter extends StatelessWidget {
 }
 
 class MainElevatedButton extends StatelessWidget {
-  final String label;
+  final String? label;
+  final int? points;
   final VoidCallback onPressed;
 
   const MainElevatedButton({
     super.key,
-    required this.label,
+    this.label,
+    this.points,
     required this.onPressed,
   });
 
@@ -93,7 +132,7 @@ class MainElevatedButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(fixedSize: const Size.fromWidth(128)),
       onPressed: onPressed,
-      child: Text(label),
+      child: Text(label ?? 'Add $points Points'),
     );
   }
 }
