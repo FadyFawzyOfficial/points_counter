@@ -44,6 +44,8 @@ class HomeScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 32),
                     ),
                     BlocBuilder<CounterCubit, CounterState>(
+                      buildWhen: (previous, current) =>
+                          previous.aPoints != current.aPoints,
                       builder: (context, state) {
                         return Text(
                           '${state.aPoints}',
@@ -75,6 +77,8 @@ class HomeScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 32),
                     ),
                     BlocBuilder<CounterCubit, CounterState>(
+                      buildWhen: (previous, current) =>
+                          previous.bPoints != current.bPoints,
                       builder: (context, state) {
                         return Text(
                           '${state.bPoints}',
