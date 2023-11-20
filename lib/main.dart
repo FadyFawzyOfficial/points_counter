@@ -47,6 +47,7 @@ class HomeScreen extends StatelessWidget {
                       buildWhen: (previous, current) =>
                           previous.aPoints != current.aPoints,
                       builder: (context, state) {
+                        debugPrint('This Score A Widget Rebuilt');
                         return Text(
                           '${state.aPoints}',
                           style: const TextStyle(fontSize: 128),
@@ -80,6 +81,7 @@ class HomeScreen extends StatelessWidget {
                       buildWhen: (previous, current) =>
                           previous.bPoints != current.bPoints,
                       builder: (context, state) {
+                        debugPrint('This Score B Widget Rebuilt');
                         return Text(
                           '${state.bPoints}',
                           style: const TextStyle(fontSize: 128),
