@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'cubits/counter/counter_cubit.dart';
 
 void main() => runApp(const App());
 
@@ -12,7 +15,10 @@ class App extends StatelessWidget {
       theme: ThemeData(
         colorScheme: const ColorScheme.light(primary: Colors.orange),
       ),
-      home: const HomeScreen(),
+      home: BlocProvider(
+        create: (context) => CounterCubit(),
+        child: const HomeScreen(),
+      ),
     );
   }
 }
@@ -21,7 +27,7 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Points Counter')),
       body: Padding(
@@ -37,14 +43,24 @@ class HomeScreen extends StatelessWidget {
                       'Team A',
                       style: TextStyle(fontSize: 32),
                     ),
-                    const Text(
-                      '',
-                      style: TextStyle(fontSize: 128),
+                    BlocBuilder<CounterCubit, CounterState>(
+                      builder: (context, state) {
+                        return Text(
+                          '${state.aPoints}',
+                          style: const TextStyle(fontSize: 128),
+                        );
+                      },
                     ),
                     ScoreIncrementor(
-                      add1Point: () {},
-                      add2Points: () {},
-                      add3Points: () {},
+                      add1Point: () => context
+                          .read<CounterCubit>()
+                          .incrementPoints(isTeamA: true, points: 1),
+                      add2Points: () => context
+                          .read<CounterCubit>()
+                          .incrementPoints(isTeamA: true, points: 2),
+                      add3Points: () => context
+                          .read<CounterCubit>()
+                          .incrementPoints(isTeamA: true, points: 3),
                     ),
                   ],
                 ),
@@ -52,10 +68,32 @@ class HomeScreen extends StatelessWidget {
                   height: 300,
                   child: VerticalDivider(thickness: 1),
                 ),
-                ScoreIncrementor(
-                  add1Point: () {},
-                  add2Points: () {},
-                  add3Points: () {},
+                Column(
+                  children: [
+                    const Text(
+                      'Team B',
+                      style: TextStyle(fontSize: 32),
+                    ),
+                    BlocBuilder<CounterCubit, CounterState>(
+                      builder: (context, state) {
+                        return Text(
+                          '${state.bPoints}',
+                          style: const TextStyle(fontSize: 128),
+                        );
+                      },
+                    ),
+                    ScoreIncrementor(
+                      add1Point: () => context
+                          .read<CounterCubit>()
+                          .incrementPoints(isTeamA: false, points: 1),
+                      add2Points: () => context
+                          .read<CounterCubit>()
+                          .incrementPoints(isTeamA: false, points: 2),
+                      add3Points: () => context
+                          .read<CounterCubit>()
+                          .incrementPoints(isTeamA: false, points: 3),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -63,7 +101,7 @@ class HomeScreen extends StatelessWidget {
               child: Center(
                 child: MainElevatedButton(
                   label: 'Reset',
-                  onPressed: () {},
+                  onPressed: context.read<CounterCubit>().reset,
                 ),
               ),
             ),
@@ -87,7 +125,7 @@ class ScoreIncrementor extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return Column(
       children: [
         MainElevatedButton(
@@ -120,7 +158,7 @@ class MainElevatedButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(fixedSize: const Size.fromWidth(128)),
       onPressed: onPressed,
