@@ -43,13 +43,15 @@ class HomeScreen extends StatelessWidget {
                       'Team A',
                       style: TextStyle(fontSize: 32),
                     ),
-                    BlocBuilder<CounterCubit, CounterState>(
-                      buildWhen: (previous, current) =>
-                          previous.aPoints != current.aPoints,
-                      builder: (context, state) {
-                        debugPrint('This Score A Widget Rebuilt');
+                    BlocSelector<CounterCubit, CounterState, int>(
+                      selector: (state) {
+                        debugPrint('Team A State');
+                        return state.aPoints;
+                      },
+                      builder: (context, aPoints) {
+                        debugPrint('aPoints is rebuilt');
                         return Text(
-                          '${state.aPoints}',
+                          '$aPoints',
                           style: const TextStyle(fontSize: 128),
                         );
                       },
@@ -77,13 +79,15 @@ class HomeScreen extends StatelessWidget {
                       'Team B',
                       style: TextStyle(fontSize: 32),
                     ),
-                    BlocBuilder<CounterCubit, CounterState>(
-                      buildWhen: (previous, current) =>
-                          previous.bPoints != current.bPoints,
-                      builder: (context, state) {
-                        debugPrint('This Score B Widget Rebuilt');
+                    BlocSelector<CounterCubit, CounterState, int>(
+                      selector: (state) {
+                        debugPrint('Team B State');
+                        return state.bPoints;
+                      },
+                      builder: (context, bPoints) {
+                        debugPrint('bPoints is rebuilt');
                         return Text(
-                          '${state.bPoints}',
+                          '$bPoints',
                           style: const TextStyle(fontSize: 128),
                         );
                       },
