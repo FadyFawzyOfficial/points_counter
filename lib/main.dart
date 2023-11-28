@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'cubits/counter/counter_cubit.dart';
 
 void main() => runApp(const App());
 
-class App extends StatefulWidget {
+class App extends StatelessWidget {
   const App({super.key});
-
-  @override
-  State<App> createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  var teamAScore = 0;
-  var teamBScore = 0;
 
   @override
   Widget build(context) {
@@ -20,84 +15,129 @@ class _AppState extends State<App> {
       theme: ThemeData(
         colorScheme: const ColorScheme.light(primary: Colors.orange),
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Points Counter'),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ScoreCounter(
-                    name: 'Team A',
-                    score: teamAScore,
-                    add1Point: () => setState(() => teamAScore++),
-                    add2Points: () => setState(() => teamAScore += 2),
-                    add3Points: () => setState(() => teamAScore += 3),
-                  ),
-                  const SizedBox(
-                    height: 300,
-                    child: VerticalDivider(thickness: 1),
-                  ),
-                  ScoreCounter(
-                    name: 'Team B',
-                    score: teamBScore,
-                    add1Point: () => setState(() => teamBScore++),
-                    add2Points: () => setState(() => teamBScore += 2),
-                    add3Points: () => setState(() => teamBScore += 3),
-                  ),
-                ],
-              ),
-              Expanded(
-                child: Center(
-                  child: MainElevatedButton(
-                    label: 'Reset',
-                    onPressed: () => setState(() {
-                      teamAScore = 0;
-                      teamBScore = 0;
-                    }),
-                  ),
+      home: BlocProvider(
+        create: (context) => CounterCubit(),
+        child: const HomeScreen(),
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Points Counter')),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    const Text(
+                      'Team A',
+                      style: TextStyle(fontSize: 32),
+                    ),
+                    BlocSelector<CounterCubit, CounterState, int>(
+                      selector: (state) {
+                        debugPrint('Team A State');
+                        return state.aPoints;
+                      },
+                      builder: (context, aPoints) {
+                        debugPrint('aPoints is rebuilt');
+                        return Text(
+                          '$aPoints',
+                          style: const TextStyle(fontSize: 128),
+                        );
+                      },
+                    ),
+                    ScoreIncrementor(
+                      add1Point: () => context
+                          .read<CounterCubit>()
+                          .incrementPoints(isTeamA: true, points: 1),
+                      add2Points: () => context
+                          .read<CounterCubit>()
+                          .incrementPoints(isTeamA: true, points: 2),
+                      add3Points: () => context
+                          .read<CounterCubit>()
+                          .incrementPoints(isTeamA: true, points: 3),
+                    ),
+                  ],
                 ),
-              )
-            ],
-          ),
+                const SizedBox(
+                  height: 300,
+                  child: VerticalDivider(thickness: 1),
+                ),
+                Column(
+                  children: [
+                    const Text(
+                      'Team B',
+                      style: TextStyle(fontSize: 32),
+                    ),
+                    BlocSelector<CounterCubit, CounterState, int>(
+                      selector: (state) {
+                        debugPrint('Team B State');
+                        return state.bPoints;
+                      },
+                      builder: (context, bPoints) {
+                        debugPrint('bPoints is rebuilt');
+                        return Text(
+                          '$bPoints',
+                          style: const TextStyle(fontSize: 128),
+                        );
+                      },
+                    ),
+                    ScoreIncrementor(
+                      add1Point: () => context
+                          .read<CounterCubit>()
+                          .incrementPoints(isTeamA: false, points: 1),
+                      add2Points: () => context
+                          .read<CounterCubit>()
+                          .incrementPoints(isTeamA: false, points: 2),
+                      add3Points: () => context
+                          .read<CounterCubit>()
+                          .incrementPoints(isTeamA: false, points: 3),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Expanded(
+              child: Center(
+                child: MainElevatedButton(
+                  label: 'Reset',
+                  onPressed: context.read<CounterCubit>().reset,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class ScoreCounter extends StatelessWidget {
-  final String name;
-  final int score;
+class ScoreIncrementor extends StatelessWidget {
   final VoidCallback add1Point;
   final VoidCallback add2Points;
   final VoidCallback add3Points;
 
-  const ScoreCounter({
+  const ScoreIncrementor({
     super.key,
-    required this.name,
-    required this.score,
     required this.add1Point,
     required this.add2Points,
     required this.add3Points,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return Column(
       children: [
-        Text(
-          name,
-          style: const TextStyle(fontSize: 32),
-        ),
-        Text(
-          '$score',
-          style: const TextStyle(fontSize: 128),
-        ),
         MainElevatedButton(
           points: 1,
           onPressed: add1Point,
@@ -128,7 +168,7 @@ class MainElevatedButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(fixedSize: const Size.fromWidth(128)),
       onPressed: onPressed,
